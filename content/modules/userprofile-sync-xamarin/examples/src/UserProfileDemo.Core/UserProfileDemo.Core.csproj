@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <ReleaseVersion>3.0</ReleaseVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Class1.cs" />
+    <Compile Remove="ServiceContainer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+    <Folder Include="Respositories\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UserProfileDemo.Models\UserProfileDemo.Models.csproj" />
+    <ProjectReference Include="..\CouchbaseLabs.MVVM\CouchbaseLabs.MVVM.csproj" />
+  </ItemGroup>
+</Project>
