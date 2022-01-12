@@ -21,7 +21,7 @@ namespace UserProfileDemo.iOS
             global::Xamarin.Forms.Forms.Init();
 
             // tag::activate[]
-            Couchbase.Lite.Support.iOS.Activate();
+            // Couchbase.Lite.Support.iOS.Activate(); // deprecated command removed in 3.0
             // end::activate[]
 
             LoadApplication(new App());
