@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <ReleaseVersion>3.0</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,9 +11,13 @@
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="4.2.0.709249" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2291" />
+    <PackageReference Include="Couchbase.Lite.Enterprise" Version="3.0.0-beta02" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CouchbaseLabs.MVVM\CouchbaseLabs.MVVM.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Couchbase.Lite.Enterprise" />
   </ItemGroup>
 </Project>
