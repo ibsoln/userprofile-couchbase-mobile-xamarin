@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <ReleaseVersion>3.0</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,5 +16,11 @@
   <ItemGroup>
     <ProjectReference Include="..\UserProfileDemo.Models\UserProfileDemo.Models.csproj" />
     <ProjectReference Include="..\CouchbaseLabs.MVVM\CouchbaseLabs.MVVM.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Couchbase.Lite.Enterprise" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Couchbase.Lite.Enterprise" Version="3.0.0-beta02" />
   </ItemGroup>
 </Project>

@@ -11,11 +11,13 @@ namespace UserProfileDemo.Core.ViewModels
 {
     public class UserProfileViewModel : BaseNavigationViewModel
     {
+        
         IUserProfileRepository UserProfileRepository { get; set; }
         IAlertService AlertService { get; set; }
         IMediaService MediaService { get; set; }
 
         string UserProfileDocId => $"user::{AppInstance.User.Username}";
+        //string UserProfileDocId => $"user::{AppInstance.User.Username}" ?? $"user::demo@example.com";
 
         string _name;
         public string Name
