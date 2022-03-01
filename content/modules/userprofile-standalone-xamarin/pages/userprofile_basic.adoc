@@ -10,7 +10,15 @@ endif::[]
 :page-toclevels: 3@
 :examplesdir: ../examples
 :imagesdir: ../assets/images
-:githubsrc: https://github.com/couchbaselabs/userprofile-couchbase-mobile-xamarin/tree/standalone/modules/userprofile/examples/src
+:githubsrc:
+
+
+
+:githubsrc: https://github.com/couchbaselabs/userprofile-couchbase-mobile-xamarin/tree/standalone/content/modules/userprofile-standalone-xamarin/examples/src
+ifndef::major[:major: 3]
+ifndef::minor[:minor: 0]
+ifndef::maintenance[:maintenance: 0]
+ifndef::base[:base: 0]
 
 toc::[]
 
@@ -577,7 +585,7 @@ If you want to learn more about Couchbase Mobile, check out the following links.
 ****
 * https://www.couchbase.com/products/mobile[Introduction to Couchbase Mobile]
 
-* https://blog.couchbase.com/couchbase-mobile-2-0/[Couchbase Mobile 2.0 Overview]
+* https://blog.couchbase.com/couchbase-mobile-2-0/[Couchbase Mobile Overview]
 
 * https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/index.html[Couchbase Lite Reference Guide]
 
