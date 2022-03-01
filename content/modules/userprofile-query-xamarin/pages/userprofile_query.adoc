@@ -8,9 +8,20 @@
 ifndef::env-site,env-github[]
 :toc: left
 endif::[]
-:githubsrc: https://github.com/couchbaselabs/userprofile-couchbase-mobile-xamarin/tree/query/modules/userprofile/examples/src
+:githubsrc: https://github.com/couchbaselabs/userprofile-couchbase-mobile-xamarin/tree/query/content/modules/userprofile-query-xamarin/examples/src
 
+ifndef::major[:major: 3]
+ifndef::minor[:minor: 0]
+ifndef::maintenance[:maintenance: 0]
+ifndef::base[:base: 0]
 toc::[]
+
+// Inter-Tutorial Links
+:standalone--xref: xref:userprofile-standalone-xamarin:userprofile_basic.adoc[Standalone tutorial]
+:query--xref: xref:userprofile-query-xamarin:userprofile_query.adoc[Query tutorial]
+:sync--xref: xref:userprofile-sync-xamarin:userprofile_sync.adoc[Sync tutorial]xamarin
+
+
 
 
 == Introduction
@@ -19,12 +30,13 @@ toc::[]
 Couchbase Lite brings powerful querying and Full-Text-Search(FTS) capabilities to the edge.
 
 The query interface is based on
-https://www.couchbase.com/products/n1ql[N1QL], Couchbase's declarative query language that extends
-https://www.sqlite.org/index.html[SQL] for JSON.
+https://www.couchbase.com/products/n1ql[N1QL],
+Couchbase's declarative query language, which implements the emerging SQL++ standard.
 If you are familiar with SQL, you will feel right at home with the semantics of the new API.
 
 The query API is designed using the
-https://en.wikipedia.org/wiki/Fluent_interface[Fluent API Design Pattern], and it uses method cascading to read to like a Domain Specific Language (DSL).
+https://en.wikipedia.org/wiki/Fluent_interface[Fluent API Design Pattern]
+, and it uses method cascading to read to like a Domain Specific Language (DSL).
 This makes the interface very intuitive and easy to understand.
 
 Couchbase Lite can be used as a standalone embedded database within your iOS, Android, and UWP mobile apps.
@@ -48,8 +60,7 @@ You can learn more about Couchbase Mobile https://developer.couchbase.com/mobile
 
 This tutorial assumes familiarity with building Xamarin apps and with the basics of Couchbase Lite
 
-* If you are unfamiliar with the basics of Couchbase Lite, it is recommended that you walk through the
-https://docs.couchbase.com/userprofile-couchbase-mobile/standalone/userprofile/xamarin/userprofile_basic.html[Fundamentals Tutorial] on using Couchbase Lite 2.0 as a standalone database
+* If you are unfamiliar with the basics of Couchbase Lite, it is recommended that you walk through the {standalone--xref}, which covers the fundamentals of using Couchbase Lite as a standalone database
 
 * iOS (Xcode 12.5+)
 
@@ -72,14 +83,14 @@ https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[git-scm.org]
 
 We will be working with a very simple "User Profile" app.
 If you had walked through the
-https://docs.couchbase.com/userprofile-couchbase-mobile/standalone/userprofile/xamarin/userprofile_basic.html[Fundamentals tutorial],
+{standalone--xref},
 you would quickly realize that this version extends the functionality introduced in the version introduced in that tutorial.
 
 This app does the following
 
 * Allows users to log in and create or update his/her user profile information.
 You could also do this in the
-https://docs.couchbase.com/userprofile-couchbase-mobile/standalone/userprofile/xamarin/userprofile_basic.html[Fundamentals tutorial].
+{standalone--xref}.
 
 * As part of profile information, users have the ability to select a `University` from a list of possible options.
 
@@ -141,7 +152,7 @@ The solution consists of seven projects.
 
 * *UserProfileDemo.Models*: A .NET Standard project consisting of simple data models.
 
-* *UserProfileDemo.Repositories*: A .NET Standard project consisting of repository classes responsible for Couchbase Lite database initilization, interaction, etc.
+* *UserProfileDemo.Repositories*: A .NET Standard project consisting of repository classes responsible for Couchbase Lite database initialization, interaction, etc.
 
 * *UserProfileDemo.iOS*: A Xamarin.iOS platform project responsible for building the `.ipa` file.
 
@@ -157,7 +168,8 @@ Now that you have an understanding of the solution architecture let's dive into 
 
 Before diving into the code for the apps, it is important to point out the Couchbase Lite dependencies within the solution.
 The
-https://www.nuget.org/packages/Couchbase.Lite/[Couchbase.Lite Nuget package] is included as a reference within four projects of this solution:
+https://www.nuget.org/packages/Couchbase.Lite/[Couchbase.Lite Nuget package]
+is included as a reference within four projects of this solution:
 
 * UserProfileDemo.Repositories
 
@@ -206,6 +218,7 @@ include::example$/src/UserProfileDemo.Models/UserProfile.cs[tags=userprofile,ind
 ----
 
 
+[#lbl-unidoc]
 === The University Document
 
 
@@ -237,7 +250,9 @@ include::example$/src/UserProfileDemo.Models/University.cs[tags=university,inden
 ----
 
 
+[#lbl-prebuilt]
 == Using a Prebuilt Database
+
 
 === Reasons
 
@@ -277,7 +292,8 @@ image::cblite_location_android.png[Prebuilt Database Location]
 === Loading
 
 * Open the
-{githubsrc}/UserProfileDemo.Repositories/DatabaseManager.cs[DatabaseManager.cs] file and locate the `GetDatabaseAsync` method.
+{githubsrc}/UserProfileDemo.Repositories/DatabaseManager.cs[DatabaseManager.cs]
+file and locate the `GetDatabaseAsync` method.
 The prebuilt database is common to all users of the app (on the device).
 So it will be loaded once and shared by all users on the device.
 +
@@ -314,8 +330,8 @@ However, in order to speed up queries, you can create indexes on the properties 
 Indexing is handled eagerly.
 
 * In the
-{githubsrc}/UserProfileDemo.Repositories/DatabaseManager.cs[*DatabaseManager.cs*] file,
-locate the `CreateUniversitiesDatabaseIndexes` method.
+{githubsrc}/UserProfileDemo.Repositories/DatabaseManager.cs[*DatabaseManager.cs*]
+file, locate the `CreateUniversitiesDatabaseIndexes` method.
 We create an index on the `name` and `location` properties of the documents in the _university_ database.
 +
 [source,c#]
@@ -366,7 +382,7 @@ Will open/create DB  at path /Users/[user_name]/Library/Developer/CoreSimulator/
 . The above log message indicates the location of the Prebuilt database as well as the Database for the user. +
 This will normally be within the _Application Support_ folder.
 
-. Open the folder in your Finder app and verify that a Database with name _"univerities"_ exists along with a user specific Database with name _"userprofile"_
+. Open the folder in your Finder app and verify that a Database with name _"universities"_ exists along with a user specific Database with name _"userprofile"_
 +
 image::db_locations.png[Database Locations]
 
@@ -376,16 +392,17 @@ image::db_locations.png[Database Locations]
 == Exploring the Query API
 
 
-The Query API in Couchbase Lite 2.0 is extensive.
+The Query API in Couchbase Lite is extensive.
 In our app, we will be using the `QueryBuilder` API to make a simple _pattern matching_ query using the `like` operator.
 
 === Fetching University Document
 
 From the "Your Profile" screen, when the user taps on the "University" cell, a search screen is displayed where the user can enter the search criteria (name and optionally, the location) for the university.
-When the search criteria is entered, the local _"universities"_ database is queried for <<The "University" Document>> documents that match the specified search criteria.
+When the search criteria is entered, the local _"universities"_ database is queried for the <<lbl-unidoc, University>> documents that match the specified search criteria.
 
 * Open the
-{githubsrc}/UserProfileDemo.Repositories/UniversityRepository.cs[*UniversityRepository.cs*] file and locate the `SearchByName` method.
+{githubsrc}/UserProfileDemo.Repositories/UniversityRepository.cs[*UniversityRepository.cs*]
+file and locate the `SearchByName` method.
 +
 [source,c#]
 ----
@@ -399,15 +416,15 @@ include::example$/src/UserProfileDemo.Repositories/UniversityRepository.cs[tags=
 include::example$/src/UserProfileDemo.Repositories/UniversityRepository.cs[tags=buildquery,indent=0]
 ----
 +
-<1> Build a `QueryExpression` that uses the `like` operator to look for the specified _"name"_ string in the _"name"_ property.
+<.> Build a `QueryExpression` that uses the `like` operator to look for the specified _"name"_ string in the _"name"_ property.
 Notice couple of things here: +
 (a) The use of *wildcard "%" operator* to denote that we are looking for the presence of the string anywhere in the _"name"_ property and +
 (b) The use of `Function.Lower()` to convert the search string into lowercase equivalent.
 Since `like` operator does _case-sensitive matching_, we convert the search string and the property value to lowercase equivalents and compare the two.
-<2> If the location criteria was specified in the search, then Build a `QueryExpression` that uses the `Like` operator to look for the specified _"location"_ string in the _"location"_ property.
-<3> The `SelectResult.All()` specifies that we are interested in all properties in Documents that match the specified criteria
-<4> The `DataSource.Database(database)` specified the Data Source
-<5> We include the `Where` clause that is the logical ANDing of the QueryExpression in <1> and <2>
+<.> If the location criteria was specified in the search, then Build a `QueryExpression` that uses the `Like` operator to look for the specified _"location"_ string in the _"location"_ property.
+<.> The `SelectResult.All()` specifies that we are interested in all properties in Documents that match the specified criteria
+<.> The `DataSource.Database(database)` specified the Data Source
+<.> We include the `Where` clause that is the logical ANDing of the QueryExpression in <1> and <2>
 
 * We run the Query by calling the `Execute()` method on the Query that was constructed in the previous step
 +
@@ -416,14 +433,14 @@ Since `like` operator does _case-sensitive matching_, we convert the search stri
 include::example$/src/UserProfileDemo.Repositories/UniversityRepository.cs[tags=runquery,indent=0]
 ----
 
-<1> Create an instance of <<University>> type
+<1> Create an instance of <<lbl-unidoc, University>> type
 <2> Use specific type getters to fetch property values.
-The <<University>> instance is populated with these property values.
+The <<lbl-unidoc, University>> instance is populated with these property values.
 
 .Try It Out
 ****
 
-. You should have followed the steps discussed in the "Try It Out" section under <<Loading the Prebuilt Database>>
+. You should have followed the steps discussed in the "Try It Out" section under <<lbl-prebuilt, Loading the Prebuilt Database>>
 
 . Tap on the "Select University" button
 
@@ -474,11 +491,11 @@ Check out the following links for further details on the Query API.
 
 .Further Reading
 ****
-* https://blog.couchbase.com/sql-for-json-query-interface-couchbase-mobile/[Fundamentals of the Couchbase Lite 2.0 Query API]
+* https://blog.couchbase.com/sql-for-json-query-interface-couchbase-mobile/[Fundamentals of the Couchbase Lite Query API]
 
 * https://blog.couchbase.com/querying-array-collections-couchbase-mobile/[Handling Arrays in Queries]
 
-* https://blog.couchbase.com/full-text-search-couchbase-mobile-2-0/[Couchbase Lite 2.0 Full Text Search API]
+* https://blog.couchbase.com/full-text-search-couchbase-mobile-2-0/[Couchbase Lite Full Text Search API]
 
-* https://blog.couchbase.com/join-queries-couchbase-mobile/[Couchbase Lite 2.0 JOIN Query]
+* https://blog.couchbase.com/join-queries-couchbase-mobile/[Couchbase Lite JOIN Query]
 ****

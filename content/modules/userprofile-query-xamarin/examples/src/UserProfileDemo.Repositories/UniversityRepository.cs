@@ -23,18 +23,18 @@ namespace UserProfileDemo.Repositories
             if (database != null)
             {
                 // tag::buildquery[]
-                var whereQueryExpression = Function.Lower(Expression.Property("name")).Like(Expression.String($"%{name.ToLower()}%")); // <1>
+                var whereQueryExpression = Function.Lower(Expression.Property("name")).Like(Expression.String($"%{name.ToLower()}%")); // <.>
 
                 if (!string.IsNullOrEmpty(country))
                 {
-                    var countryQueryExpression = Function.Lower(Expression.Property("country")).Like(Expression.String($"%{country.ToLower()}%")); // <2>
+                    var countryQueryExpression = Function.Lower(Expression.Property("country")).Like(Expression.String($"%{country.ToLower()}%")); // <.>
 
-                    whereQueryExpression = whereQueryExpression.And(countryQueryExpression); // <3>
+                    whereQueryExpression = whereQueryExpression.And(countryQueryExpression);
                 }
 
-                var query = QueryBuilder.Select(SelectResult.All()) // <4>
-                                        .From(DataSource.Database(database)) // <5>
-                                        .Where(whereQueryExpression); // <6>
+                var query = QueryBuilder.Select(SelectResult.All()) // <.>
+                                        .From(DataSource.Database(database)) // <.>
+                                        .Where(whereQueryExpression); // <.>
 
                 // end::buildquery[]
 
