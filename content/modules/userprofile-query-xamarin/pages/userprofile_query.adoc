@@ -218,7 +218,7 @@ include::example$/src/UserProfileDemo.Models/UserProfile.cs[tags=userprofile,ind
 ----
 
 
-[#lbl-unidoc]
+[#university-document]
 === The University Document
 
 
@@ -250,7 +250,7 @@ include::example$/src/UserProfileDemo.Models/University.cs[tags=university,inden
 ----
 
 
-[#lbl-prebuilt]
+[#prebuilt-database]
 == Using a Prebuilt Database
 
 
@@ -398,7 +398,7 @@ In our app, we will be using the `QueryBuilder` API to make a simple _pattern ma
 === Fetching University Document
 
 From the "Your Profile" screen, when the user taps on the "University" cell, a search screen is displayed where the user can enter the search criteria (name and optionally, the location) for the university.
-When the search criteria is entered, the local _"universities"_ database is queried for the <<lbl-unidoc, University>> documents that match the specified search criteria.
+When the search criteria is entered, the local _"universities"_ database is queried for the <<university-document, University>> documents that match the specified search criteria.
 
 * Open the
 {githubsrc}/UserProfileDemo.Repositories/UniversityRepository.cs[*UniversityRepository.cs*]
@@ -433,14 +433,14 @@ Since `like` operator does _case-sensitive matching_, we convert the search stri
 include::example$/src/UserProfileDemo.Repositories/UniversityRepository.cs[tags=runquery,indent=0]
 ----
 
-<1> Create an instance of <<lbl-unidoc, University>> type
+<1> Create an instance of <<university-document, University>> type
 <2> Use specific type getters to fetch property values.
-The <<lbl-unidoc, University>> instance is populated with these property values.
+The <<university-document, University>> instance is populated with these property values.
 
 .Try It Out
 ****
 
-. You should have followed the steps discussed in the "Try It Out" section under <<lbl-prebuilt, Loading the Prebuilt Database>>
+. You should have followed the steps discussed in the "Try It Out" section under <<prebuilt-database, Loading the Prebuilt Database>>
 
 . Tap on the "Select University" button
 
