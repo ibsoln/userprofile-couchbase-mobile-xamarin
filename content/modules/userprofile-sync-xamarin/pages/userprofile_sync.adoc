@@ -1,14 +1,17 @@
 = User Profile Sample: Data Sync Fundamentals
+:page-toclevels: 3@
 :idprefix:
 :idseparator: -
 :icons: font
 :quick-uri: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/
-:page-hide-view-latest: true
 ifndef::env-site,env-github[]
 :toc: left
-:page-toclevels: 3@
 endif::[]
-:githubsrc: https://github.com/couchbaselabs/userprofile-couchbase-mobile-xamarin/tree/sync/modules/userprofile-sync-xamarin/examples/src
+:githubsrc: https://github.com/couchbaselabs/userprofile-couchbase-mobile-xamarin/tree/sync/content/modules/userprofile-sync-xamarin/examples/src
+ifndef::major[:major: 3]
+ifndef::minor[:minor: 0]
+ifndef::maintenance[:maintenance: 0]
+ifndef::base[:base: 0]
 
 toc::[]
 
