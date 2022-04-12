@@ -1,0 +1,6 @@
+= Standalone Fundamentals
+
+To follow this course on Github, see:
+https://github.com/couchbaselabs/userprofile-couchbase-mobile-xamarin/blob/standalone/content/modules/userprofile-standalone-xamarin/pages/userprofile_basic.adoc[]
+
+Or go to our Tutorials pages on the Couchbase web site here <<>>.
