@@ -1,0 +1,6 @@
+= Sync Fundamentals
+
+To follow this course on Github, see:
+https://github.com/couchbaselabs/userprofile-couchbase-mobile-xamarin/blob/sync/content/modules/userprofile-sync-xamarin/pages/userprofile_sync.adoc[]
+
+Or go to our Tutorials pages on the Couchbase web site here <<>>.
