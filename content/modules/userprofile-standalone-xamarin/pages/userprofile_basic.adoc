@@ -1,0 +1,593 @@
+= User Profile Sample: Couchbase Lite Fundamentals
+:idprefix:
+:idseparator: -
+:icons: font
+:quick-uri: https://asciidoctor.org/docs/asciidoc-syntax-quick-reference/
+:page-hide-view-latest: true
+ifndef::env-site,env-github[]
+:toc: left
+endif::[]
+:page-toclevels: 3@
+:examplesdir: ../examples
+:imagesdir: ../assets/images
+:githubsrc:
+
+
+
+:githubsrc: https://github.com/couchbaselabs/userprofile-couchbase-mobile-xamarin/tree/standalone/content/modules/userprofile-standalone-xamarin/examples/src
+ifndef::major[:major: 3]
+ifndef::minor[:minor: 0]
+ifndef::maintenance[:maintenance: 0]
+ifndef::base[:base: 0]
+
+toc::[]
+
+// BEGIN Tutorial Attributes
+:install_script: install_tutorial.sh
+:target-version: {major}.{minor}
+:target-version-full: {major}.{minor}.{maintenance}
+ifdef::releasetag[:target-version-full: {target-version-full}-{releasetag}]
+:tutorial-component: {page-component-name}
+:tutorial-title: {page-component-title}
+:tutorial-module: {page-module}
+:tutorial-section: {version}
+:tutorial-platform: swift
+:emailId: demo@example.com
+:revision-to-update: 3-033fcbaf269d65a9247067be76d664f1111d033b
+:sgw-config-filename-3x0: sync-gateway-config-userprofile-demo-3-x-legacy.json
+:sgw-config-filename-2x8: sync-gateway-config-userprofile-demo-2-x.json
+// END Tutorial Attributes
+
+// BEGIN Tutorial Cross-reference link
+
+
+// Tutorial Links
+:standalone--xref: xref:userprofile-standalone:userprofile_basic.adoc[Standalone tutorial]
+:query--xref: xref:userprofile-query:userprofile_query.adoc[Query tutorial]
+:sync--xref: xref:userprofile-sync:userprofile_sync.adoc[Sync tutorial]
+
+// CBL Doc Links
+:cbl-documentation-component--xref: pass:q,a[xref:{target-version}@couchbase-lite:]
+:cbl-documentation-module--xref: pass:q,a[{cbl-documentation-component--xref}{tutorial-platform}:]
+:cbl-blobs--xref: {cbl-documentation-module--xref}blob.adoc[Working with Blobs]
+:cbl-install--xref: {cbl-documentation-module--xref}gs-install.adoc[Get Started - Install]
+:cbl-prepare--xref: {cbl-documentation-module--xref}gs-prereqs[Get Started - Prerequisites]
+
+// SGW Doc Links
+:documentation-component--xref: pass:q,a[xref:{target-version}@sync-gateway:]
+:documentation-module--xref: pass:q,a[{documentation-component--xref}:]
+:access-control-model--xref: {documentation-module--xref}access-control.adoc[Access Control Model]
+:channels--xref: {documentation-module--xref}channels.adoc[Channels]
+:prepare--xref: {documentation-module--xref}get-started-prepare.adoc[Get Started - Prepare]
+:sync-function--xref: pass:q,a[{documentation-module--xref}sync-function.adoc[Sync Function API]]
+:sync-function-api-access--xref: {documentation-module--xref}sync-function-api-access-cmd.adoc[access()]
+:sync-function-api-channel--xref: {documentation-module--xref}sync-function-api-channel-cmd.adoc[channel()]
+:sync-function-api-require-access--xref: {documentation-module--xref}sync-function-api-require-access-cmd.adoc[requireAccess()]
+:sync-function-api-require-user--xref: {documentation-module--xref}sync-function-api-require-user-cmd.adoc[requireUser()]
+:sync-gateway-docs--xref: {documentation-module--xref}index.adoc[Sync Gateway Documentation]
+:sync-gateway-config-overview--xref: {documentation-module--xref}configuration-overview.adoc[Sync Gateway Configuration]
+:sync-gateway-config-legacy--xref: {documentation-module--xref}configuration-properties-legacy.adoc[legacy configuration option]
+:rest-api--url: https://docs.couchbase.com/sync-gateway/{target-version}/rest-api.html
+:rest-api-document-put--url: {rest-api--url}#/document/AddOrUpdateDocument[PUT Document REST API]
+:rest-api-document-get--url: {rest-api--url}#/document/GetDocument[GET Document REST API]
+
+
+// External Site Links
+:mac-app-store--url: https://itunes.apple.com/us/app/xcode/id497799835?mt=12[Mac App Store^]
+:github-account--url: https://github.com[free github account^]
+:github-download--url: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[git-scm.org^]
+:curl-download--url: https://curl.haxx.se/download.html[curl website^]
+:docker-download--url: https://docs.docker.com/get-docker/[Get Docker^]
+
+// Blog Links
+:blog--url: https://blog.couchbase.com
+:blog-sync-function-related--url: {blog--url}/?s=sync+function[Sync function blogs]
+:blog-replication-protocol--url: {blog--url}data-replication-couchbase-mobile/[Overview of Replication Protocol]
+
+// END Tutorial Cross-reference link
+
+
+== Introduction
+
+
+Couchbase Mobile brings the power of NoSQL to the edge.
+It is comprised of three components:
+
+* _Couchbase Lite_, an embedded, NoSQL JSON Document Style database for your mobile apps
+
+* _Sync Gateway_, an internet-facing synchronization mechanism that securely syncs data between mobile clients and server, and
+
+* _Couchbase Server_, a highly scalable, distributed NoSQL database platform
+
+Couchbase Mobile supports flexible deployment models.
+You can deploy:
+
+* Couchbase Lite as a standalone embedded database within your mobile apps or,
+
+* Couchbase Lite enabled mobile clients with a Sync Gateway to synchronize data between your mobile clients or,
+
+* Couchbase Lite enabled clients with a Sync Gateway to sync data between mobile clients and the Couchbase Server, which can persist data in the cloud (public or private)
+
+.What You Will Learn
+****
+
+This tutorial will walk you through a very basic example of how you can use *Couchbase Lite in standalone mode* within your Swift app.
+In this mode, Couchbase Lite will serve as a local, embedded data store within your iOS App and can be a replacement for SQLite or Core Data.
+
+You will learn the fundamentals of:
+
+* Database Operations
+* Document CRUD Operations
+
+====
+
+You can learn more about Couchbase Mobile
+https://developer.couchbase.com/mobile[here]
+
+====
+****
+
+
+== Prerequisites
+
+
+This tutorial assumes familiarity with building
+https://www.xamarin.com[Xamarin], more specifically Xamarin.Forms, apps using C# and XAML.
+
+* iOS (Xcode 12.5+)
+
+* Android (SDK 22+)
+
+* UWP (Windows 10)
+
+* git (Optional)
+This is required if you would prefer to pull the source code from GitHub repo.
+
+** Create a
+https://github.com[free github account]
+if you don't already have one
+
+** git can be downloaded from
+https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[git-scm.org]
+
+
+== App Overview
+
+
+We will be working with a very simple _User Profile_ app.
+It does one thing -- Allow a user to log in and create or update their user profile data*
+
+The user profile data is persisted as a Document in the local Couchbase Lite Database.
+So, when the user logs out and logs back in again, the profile information is loaded from the Database.
+
+:alt-text: The sample user profile application running in a simulator
+.{alt-text}
+
+image::user_profile.gif[{alt-text},200,400]
+
+
+== Installation
+
+
+Clone the *_standalone_* branch of the `User Profile Demo` solution from GitHub.
+Assuming that you have
+https://git-scm.com/downloads[Git]
+installed you can do this using the following command:
+
+[source,bash]
+----
+git clone -b standalone https://github.com/couchbaselabs/userprofile-couchbase-mobile-xamarin.git
+----
+
+Next, let's verify the installation.
+
+.Try it Out
+****
+
+. Open the `UserProfileDemo.sln`. The project would be located at `/path/to/UserProfileDemo/modules/userprofile/examples/src`.
++
+[source,bash]
+----
+open UserProfileDemo.sln
+----
++
+. Build the solution using your preferred IDE (e.g.
+https://visualstudio.microsoft.com/[Visual Studio for Windows or Mac]) or
+https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-build?tabs=netcore2x[directly through command line].
+
+. https://docs.microsoft.com/en-us/xamarin/get-started/first-app/index?pivots=windows[Run the app]
+on a device or simulator/emulator.
+
+. Verify that you see the login screen.
++
+image::user_profile_login.png[User Profile Login Screen Image]
+****
+
+
+== Solution Overview
+
+
+The User Profile demo app is a Xamarin.Forms based solution that supports iOS and Android mobile platforms.
+
+The solution utilizes various design patterns and principles such as
+https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel[MVVM],
+https://en.wikipedia.org/wiki/Inversion_of_control[IoC],
+and the Repository Pattern.
+
+The solution consists of seven projects.
+
+* *UserProfileDemo*: A .NET Standard project responsible for maintaining view-level functionality.
+
+* *UserProfileDemo.Core*: A .NET Standard project responsible for maintaining viewmodel-level functionality.
+
+* *UserProfileDemo.Models*: A .NET Standard project consisting of simple data models.
+
+* *UserProfileDemo.Repositories*: A .NET Standard project consisting of repository classes responsible for Couchbase Lite database initialization, interaction, etc.
+
+* *UserProfileDemo.iOS*: A Xamarin.iOS platform project responsible for building the `.ipa` file.
+
+* *UserProfileDemo.Android*: A Xamarin.Android platform project responsible for building the `.apk` file.
+
+* *UserProfileDemo.UWP*: A UWP platform project responsible for building the `.exe` file.
+
+Now that you have an understanding of the solution architecture let's dive into the app!
+
+
+== Couchbase Lite Nuget
+
+
+Before diving into the code for the apps, it is important to point out the Couchbase Lite dependencies within the solution.
+The
+https://www.nuget.org/packages/Couchbase.Lite/[Couchbase.Lite Nuget package]
+is included as a reference within four projects of this solution:
+
+* UserProfileDemo.Repositories
+
+* UserProfileDemo.iOS
+
+* UserProfileDemo.Android
+
+* UserProfileDemo.UWP
+
+The `Couchbase.Lite` Nuget package contains the core functionality for Couchbase Lite.
+
+In the following sections you will dive into the capabilities the package provides.
+
+
+== Getting started on Android
+
+
+In order to use Couchbase Lite within a Xamarin app for Android you will need to activate it.
+
+Open
+{githubsrc}/UserProfileDemo.Android/MainActivity.cs[`MainActivity.cs`] in the `UserProfileDemo.Android` project.
+
+[source,c#]
+----
+
+include::example$/src/UserProfileDemo.Android/MainActivity.cs[tags=activate,indent=0]
+
+----
+
+== Data Model
+
+Let's take a look at the foundations of Couchbase; data models and documents.
+
+Couchbase Lite is a JSON Document Store.
+A Document is a logical collection of named fields and values.
+The values are any valid JSON types.
+In addition to the standard JSON types, Couchbase Lite supports `Date` and `Blob` data types.
+While it is not required or enforced, it is a recommended practice to include a _"type"_ property that can serve as a namespace for related documents.
+
+[#lbl-user-profile-document]
+=== The User Profile Document
+
+The app deals with a single Document with a _"type"_ property of _"user"_ as shown in  <<ex-user-profile-doc>>.
+The document ID is of the form _"user::{emailId}"_.
+
+[#ex-user-profile-doc]
+.A user profile document
+====
+[source, json]
+----
+{
+    "type":"user",
+    "name":"Jane Doe",
+    "email":"jame.doe@earth.org",
+    "address":"101 Main Street",
+    "image":CBLBlob (image/jpg) <.>
+}
+----
+<.> The special 'blob' data type associated with the profile image -- see: {cbl-blobs--xref}
+
+====
+
+[#lbl-user-record]
+=== The User Record
+
+The _"user"_ Document is encoded to a native struct named _UserRecord_ as shown in <<ex-user-rec>>
+
+[#ex-user-rec]
+.The encoding of a UserRecord to a native structure
+[source,{tutorial-platform}, subs="attributes+, macros+"]
+====
+----
+include::example$UserProfileDemo/model/UserRecord.swift[indent=0, tags=userrecord]
+----
+====
+
+
+== Basic Database Operations
+
+
+In this section, we will do a code walk-through of the basic Database operations
+
+[#lbl-create-open-database]
+=== Create / Open a Database
+
+When a user logs in, we create an empty Couchbase Lite database for the user if one does not exist.
+
+* Open the
+{githubsrc}/UserProfileDemo.Repositories/BaseRepository.cs[*BaseRepository.cs*] file and locate the `Database` property.
+When the `Database` property is used for the first time a Couchbase Lite database is opened, or created if it does not already exist via the instantiation of a new object.
++
+[source,c#]
+----
+include::example$/src/UserProfileDemo.Repositories/BaseRepository.cs[tags=database,indent=0]
+----
+
+* We create an instance of the `DatabaseConfiguration` within
+{githubsrc}/UserProfileDemo.Repositories/UserProfileRepository.cs[*UserProfileRepository.cs*]
+via an `abstract` requirement from the parent class, `BaseRepository`. +
+This is an optional step.
+In our case, we would like to override the default path of the database.
+Every user has their own instance of the `Database` that is located in a folder corresponding to the user.
+Please note that the default path is platform specific.
++
+[source,c#]
+----
+include::example$/src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=databaseconfiguration,indent=0]
+----
+
+* Then we create a local Couchbase Lite database named *_"userprofile"_* for the user.
+If a database already exists for the user, the existing version is returned.
++
+[source,c#]
+----
+include::example$/src/UserProfileDemo.Repositories/BaseRepository.cs[tags=databaseCreate,indent=0]
+----
+
+=== Listening to Database Changes
+You can be asynchronously notified of any change (add, delete, update) to the `Database` by registering a change listener with the `Database`. +
+In our app, we are not doing anything special with the `Database` change notification other than logging the change.
+In a real world app, you would use this notification for instance, to update the UI.
+
+* Open the
+{githubsrc}/UserProfileDemo.Repositories/BaseRepository.cs[*BaseRepository.cs*]
+file and locate the `Database.AddChangeListener` function usage within the constructor.
++
+[source,c#]
+----
+include::example$/src/UserProfileDemo.Repositories/BaseRepository.cs[tags=registerForDatabaseChanges,indent=0]
+----
+
+* To register a change listener with the database we add the delegate method `OnDatabaseChangeEvent`.
+This is an optional step.
+The `AddChangeListener` method returns a `ListenerToken`.
+The `ListenerToken` is required to remove the listener from the database. +
+The listener is a delegate method that takes two parameters of type `object` and `DatabaseChangedEventArgs` respectively.
++
+[source,c#]
+----
+include::example$/src/UserProfileDemo.Repositories/BaseRepository.cs[tags=addChangeListener,indent=0]
+----
+
+=== Close Database
+
+When a user logs out, we close the Couchbase Lite database associated with the user, deregister any database change listeners, and free up memory allocations.
+
+Open the
+{githubsrc}/UserProfileDemo.Repositories/BaseRepository.cs[*BaseRepository.cs*]
+file and locate the `Dispose` method.
+In our sample `Dispose` handles the removal of database listeners, removing various objects from memory, and closing the database.
+`Dispose` will be called when a user logs out.
+
+[source,c#]
+----
+include::example$/src/UserProfileDemo.Repositories/BaseRepository.cs[tags=databaseClose,indent=0]
+----
+
+.Try it out
+****
+
+. Run the app to be tested using a simulator/emulator or device.
+
+. Log into the app with any username and password. +
+Use the values _"demo@example.com"_ and _"password"_ for username and password fields respectively.
++
+If this is the first time that the user is signing in, a new Couchbase Lite database will be created.
+If not, the user's existing database will be opened.
+
+. Confirm that the console log output has a message similar to the one below.
++
+In my example, I am logging in with a username of _"demo@example.com"_.
++
+This will open (or create) a database at path
+`/Users/[user_name]/Library/Developer/CoreSimulator/Devices/[unique_device_id]/data/Containers/Data/Application/[unique_app_id]/Library/Application Support/demo@example.com`
+
+. Note the folder location of the database, which is indicated in the above log message
+
+. Open the folder in your Finder app and verify that a database with name _"userprofile"_ is exists for the user
++
+image::db_location.png[User Profile Database Location]
+
+****
+
+
+== Document Operations
+
+
+Once an instance of the Couchbase Lite database is created/opened for the specific user, we can perform basic `Document` functions on the database.
+
+In this section, we will walk-through the code that describes basic `Document` operations
+
+=== Reading a Document
+
+Once the user logs in, the user is taken to the "Your Profile" screen.
+A request is made to load  <<lbl-user-profile-document>>  for the user.
+When the user logs in the very first time, there would be no _user profile_ document for the user.
+
+* Open the
+{githubsrc}/UserProfileDemo.Core/ViewModels/UserProfileViewModel.cs[*UserProfileViewModel.cs*]
+file and locate the `userProfileDocId` definition.
+This document Id is constructed by prefixing the term "user::" to the username of the user.
++
+[source,c#]
+----
+include::example$/src/UserProfileDemo.Core/ViewModels/UserProfileViewModel.cs[tags=userProfileDocId,indent=0]
+----
+
+* The `UserProfileViewModel` is tasked with retrieving the profile for a logged in user. It does this by using a class that implements `IUserProfileRepository`.
++
+[source,c#]
+----
+include::example$/src/UserProfileDemo.Core/ViewModels/UserProfileViewModel.cs[tags=getUserProfileUsingRepo,indent=0]
+----
+
+* In the
+{githubsrc}/UserProfileDemo.Repositories/UserProfileRepository.cs[*UserProfileRepository.cs*]
+file, locate the `Get` function.
++
+[source,c#]
+----
+include::example$/src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=getUserProfile,indent=0]
+----
+
+* We try to fetch the document with specified `userProfileDocId` from the database.
++
+[source,c#]
+----
+
+include::example$/src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=docfetch,indent=0]
+
+----
+
+<1> Fetch an *immutable* copy of the `Document` from the database.
+
+<2> Create an instance of <<lbl-user-record>> object
+
+<3> Set the `email` property of the UserProfile with the username of the logged in user. +
+*Note:* This value is not editable after it's initially saved.
+
+<4> If the document exists and is fetched successfully, a variety of methods exist that can be used to fetch members of the `Document`.
+Specifically, note the support of the `GetBlob` type to fetch the value of a property of type `Blob`.
+
+=== Creating / Updating a Document
+
+A <<lbl-user-profile-document>> is created for the user when the user taps the "Done" button on the "Profile Screen".
+The function below applies whether you are creating a document or updating an existing version
+
+* The `UserProfileViewModel` is tasked with setting values of a profile for a logged in user, and saving them to the database.
+It does this by using a class that implements `IUserProfileRepository`.
++
+[source,c#]
+----
+include::example$/src/UserProfileDemo.Core/ViewModels/UserProfileViewModel.cs[tags=saveUserProfileUsingRepo,indent=0]
+----
+
+* Open the
+{githubsrc}/UserProfileDemo.Repositories/UserProfileRepository.cs[*UserProfileRepository.cs*] file and locate the `Save` function.
++
+[source,c#]
+----
+include::example$/src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=saveUserProfile,indent=0]
+----
+
+* We create a *mutable* instance of the `Document`.
+By default, all APIs in Couchbase Lite deal with immutable objects, thereby making them *thread-safe* by design.
+In order to mutate an object, you must explicitly get a mutable copy of the object.
+Use appropriate type-setters to set the various properties of the `Document`
++
+[source,c#]
+----
+
+include::example$/src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=docSet,indent=0]
+
+----
+
+<1> Specifically, note the support of the `SetBlob` type to fetch the value of a property of type `Blob`.
+
+* Save the document
++
+[source,c#]
+----
+
+include::example$/src/UserProfileDemo.Repositories/UserProfileRepository.cs[tags=docSave,indent=0]
+
+----
+
+
+=== Deleting a Document
+
+We don't delete a `Document` in this sample app. However, deletion of a document is pretty straightforward and this is how you would do it.
+[source,c#]
+----
+
+var document = Database.GetDocument(id);
+
+if (document != null)
+{
+    Database.Delete(document);
+}
+
+----
+
+.Try It Out
+****
+
+. You should have followed the steps discussed in the "Try It Out" section under <<Create / Open a Database>>
+
+. Enter a "name" for the user in the Text Entry box and Tap "Done"
+
+. Confirm that you see an alert message "Succesfully Updated Profile". The first time, you update the profile screen, the Document will be created.
++
+image::doc_create.png[User Profile Document Creation]
++
+
+. Now tap on the "Upload Image" button and select an image from the Photo Album. Tap "Done".
++
+image::image_selection.gif[100,400]
+
+. Confirm that you see an alert message "Successfully Updated Profile".
+The Document will be updated this time.
+
+. Tap "Log Off" and log out of the app
+
+. Log back into the app with the same user credentials you used earlier.
+In my example, I used _"+demo@example.com+"_ and _"password"_.
+So I will log in with those credentials again.
+
+. Confirm that you see the profile screen  with the _name_ and _image_ values that you set earlier.
++
+image::log_off_on.gif[200,400]
+****
+
+
+== Learn More
+
+
+Congratulations on completing this tutorial!
+
+This tutorial walked you through a very basic example of how to get up and running with Couchbase Lite as a local-only, standalone embedded data store in your iOS, Android, or UWP app.
+If you want to learn more about Couchbase Mobile, check out the following links.
+
+.Further Reading
+****
+* https://www.couchbase.com/products/mobile[Introduction to Couchbase Mobile]
+
+* https://blog.couchbase.com/couchbase-mobile-2-0/[Couchbase Mobile Overview]
+
+* https://developer.couchbase.com/documentation/mobile/2.0/couchbase-lite/index.html[Couchbase Lite Reference Guide]
+
+* https://blog.couchbase.com/category/couchbase-mobile/[Couchbase Mobile Blogs]
+****
