@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <ReleaseVersion>3.0</ReleaseVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\UserProfileDemo.Models\UserProfileDemo.Models.csproj" />
+    <ProjectReference Include="..\UserProfileDemo.Core\UserProfileDemo.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Couchbase.Lite.Enterprise" Version="3.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="UniversityRepository.json" />
+    <None Remove="Couchbase.Lite.Enterprise" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+</Project>
