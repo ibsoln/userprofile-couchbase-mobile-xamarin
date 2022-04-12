@@ -1,0 +1,4 @@
+* Getting Started on Xamarin
+** xref:userprofile-standalone-xamarin:userprofile_basic.adoc[Standalone]
+** xref:userprofile-query-xamarin:userprofile_query.adoc[Query]
+** xref:userprofile-sync-xamarin:userprofile_sync.adoc[Sync]
